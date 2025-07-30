@@ -25,6 +25,8 @@ app.use("/api/events", eventRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);
 
 // Start server
+console.log(process.env.PORT);
+
 
 connectDB().then(() => {
   app.listen(PORT, () => {
