@@ -3,7 +3,9 @@ import {
   signupUser,
   loginUser,
   logoutUser,
-  verifyEmail
+  verifyEmail,
+  forgotPassword,
+  resetPassword
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -17,6 +19,14 @@ router.post("/login", loginUser);
 // POST /api/auth/logout
 router.post("/logout", logoutUser);
 
+// POST /api/auth/verify
 router.post('/verify-email', verifyEmail);
+
+// POST /api/auth/forgot-password
+router.post('/forgot-password', forgotPassword);
+
+// POST /api/auth/reset-password
+router.post('/reset-password/:token', resetPassword);
+
 
 export default router;

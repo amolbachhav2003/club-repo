@@ -1,5 +1,5 @@
 import { mailtrapClient, sender } from "./mailtrapConfig.js";
-import { VERIFICATION_EMAIL_TEMPLATE } from "./emailTemplates.js";
+import { PASSWORD_RESET_REQUEST_TEMPLATE, PASSWORD_RESET_SUCCESS_TEMPLATE, VERIFICATION_EMAIL_TEMPLATE } from "./emailTemplates.js";
 
 export const sendVerificationEmail = async (email, verificationToken) => {
     const recipient = [{email}]
@@ -29,7 +29,7 @@ export const sendWelcomeEmail = async (email, name) => {
         const response = await mailtrapClient.send({
             from: sender,
             to: recipient,
-            template_uuid:"f27f5b65-9a61-44bf-8aa9-0b4191ca7795",
+            template_uuid:"9321c577-b18c-4a27-ab1c-4fc7c9d59af3",
             template_variables: {
                 company_info_name: "DevXtreme",
                 name: name, 
@@ -40,5 +40,40 @@ export const sendWelcomeEmail = async (email, name) => {
     } catch (error) {
         console.error(`Error sending welcome email`, error);
         throw new Error(`Error sending welcome email to ${email}`);
+    }
+}
+
+export const sendPasswordResetEmail = async (email, resetURL) => {
+    const recipient = [{ email }]
+
+    try {
+        const response = await mailtrapClient.send({
+            from: sender,
+            to: recipient,
+            subject: "Reset your password",
+            html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", resetURL),
+            category: "Password Reset",
+        })
+        return response;
+    } catch (error) {
+        console.error("Mailtrap Error:", error);
+        throw new Error(error.message || `Error sending password reset email to ${email}`);
+    }
+}
+
+export const sendResetSuccessEmail = async (email) => {
+    const recipient = [{ email }]
+    try {
+        const response = await mailtrapClient.send({
+            from: sender,
+            to: recipient,
+            subject: "Password reset successful",
+            html: PASSWORD_RESET_SUCCESS_TEMPLATE,
+            category: "Password Reset",
+        })
+        return response;
+    } catch (error) {
+        console.error("Mailtrap Error:", error);
+        throw new Error(error.message || `Error sending password reset email to ${email}`);
     }
 }
